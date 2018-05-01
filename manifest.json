@@ -1,0 +1,26 @@
+{
+  "name": "Just Article",
+  "version": "1.0",
+  "description": "Just Article an Extension!",
+  "permissions" : ["activeTab", "declarativeContent","storage"],
+  "background": {
+    "scripts": ["app.js"],
+    "persistent": false
+  },
+  "page_action" : {
+    "default_popup" : "./index.html",
+    "default_icon" : {
+         "16" : "Images/article-16.png",
+        "32" : "Images/article-32.png",
+        "48" : "Images/article-48.png",
+        "128" : "Images/article-128.png"
+    }
+  },
+  "icons" : {
+    "16" : "Images/article-16.png",
+    "32" : "Images/article-32.png",
+    "48" : "Images/article-48.png",
+    "128" : "Images/article-128.png"
+  },
+  "manifest_version": 2
+}
