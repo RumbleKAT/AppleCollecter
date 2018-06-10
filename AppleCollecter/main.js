@@ -48,19 +48,28 @@ AppleView.prototype.render = function render(obj){
     console.log(obj);
     var objKeys = Object.keys(obj);
     var str = "";
-    str += "<div class='listElements'>";
+    str += "<div class='uiCard'>";
     objKeys.map(function(element){
-        if(element === "title" ){
-            str += "<h1>" + obj[element] + "</h1>";
-        }else if(element === "description"){
-            str += "<p>" + obj[element] + "</p>";
-        }else if(element === "url"){
-            str += "<a href=" + obj[element] + ">Go to the Link! </a>";
-        }else if(element === "urlToImage" && obj[element] !== null){
-            str += "<img src=" + obj[element] + " alt="+obj[element] +"/>";
-        }else if(element === "publishedAt"){
-            str += "<p>"+ obj[element] + "</p>";
+        if (element === "urlToImage" && obj[element] !== null) {
+            str += "<div class='image'>";
+            str += "<img src=" + obj[element] + " alt=" + obj[element] + "/>";
+            str += "</div>";
         }
+        str += "<div class='content'>";
+        if(element === "title" ){
+            str += "<h2>" + obj[element] + "</h2>";
+        }else if (element === "publishedAt") {
+            str += "<div class='meta'>";
+            str += "<span class='date'>" +obj[element] + "</span>";
+            str += "</div>";
+        }else if(element === "description"){
+            str += "<div class='description'>";
+            str += obj[element];
+            str += "</div>";
+        }else if(element === "url"){
+            //str += "<a href=" + obj[element] + " target=_blank>Go to the Link! </a>";
+        }
+        str += "</div>";
     });
     str += "</div>";
 
