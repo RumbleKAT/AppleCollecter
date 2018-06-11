@@ -2,6 +2,8 @@ var AppleModel = function AppleModel(XMLHttpRequest){
     this.XMLHttpRequest = XMLHttpRequest;
     this.rawDataList = [];
     this.myList = [];
+    this.langTranslate = "http://api.microsofttranslator.com/V2/Ajax.svc/Translate?appId=ABB1C5A823DC3B7B1D5F4BDB886ED308B50D1919"; //&from=en&to=ru&text=hello%3Cb%3E";
+    this.langDetect = "http://translator.imtranslator.net/translator/detect.asp?k=32348493&text=";
     this.secretToken = "b3c2e4d351ec4a56bf403743d6056888";
     this.query = "ios";
     this.index = 0;
@@ -18,6 +20,17 @@ AppleModel.prototype.getAppleData = function getAppleData(method,url,callback){
     request.open(method, url, true);
     request.send();
 }
+//lang Detect , lang Translate
+AppleModel.prototype.getTranslateData = function getTranslateData(url , query, callback){
+    var request = new this.XMLHttpRequest();
+
+    request.onload = function(){
+        var rawData = request.responseText;
+        callback(rawData);
+    }
+    request.open(url, query, callback);
+    request.send();
+}
 
 AppleModel.prototype.saveListData = function saveListData(){
     localStorage.setItem("myFavoriteList" , this.myList);
@@ -29,26 +42,14 @@ AppleModel.prototype.loadListData = function loadListData(){
 
 var AppleView = function AppleView(element){
     this.element = element;
+    this.translate = null;
 }
-/*
- "source": {
-                "id": null,
-                "name": "Seonews.ru"
-            },
-            "author": null,
-            "title": "Программист iOS",
-            "description": "Проект Seonews.ru предназначен для каждого участника рынка поискового маркетинга и ставит перед собой задачу: способствовать цивилизованному развитию рынка интернет маркетинга. На страницах SEOnews можно найти информацию о российских и зарубежных поисковых си…",
-            "url": "https://www.seonews.ru/calendar/programmist-ios_06/",
-            "urlToImage": "https://www.seonews.ru/upload/resize_cache/iblock/e93/200_200_1/e937d739e1aa2a3377282ca7650fd38d.jpg",
-            "publishedAt": "2018-06-11T17:00:00Z"
-*/
-
 
 AppleView.prototype.render = function render(obj){
-    console.log(obj);
+    //console.log(obj);
     var objKeys = Object.keys(obj);
     var str = "";
-    str += "<div class='uiCard'>";
+    str += "<div class='uiCard' index="+obj["index"]+">";
     objKeys.map(function(element){
         if (element === "urlToImage" && obj[element] !== null) {
             str += "<div class='image'>";
@@ -62,7 +63,9 @@ AppleView.prototype.render = function render(obj){
             str += "<div class='meta'>";
             str += "<span class='date'>" +obj[element] + "</span>";
             str += "</div>";
-        }else if(element === "description"){
+        }
+        
+        if(element === "description"){
             str += "<div class='description'>";
             str += obj[element];
             str += "</div>";
@@ -71,44 +74,74 @@ AppleView.prototype.render = function render(obj){
         }
         str += "</div>";
     });
+    str += "<div class='uiBtn'>";
+    str += "<button class='btnElement' val='save'>";
+    str += "저장";
+    str += "</button>";
+    str += "<button class='btnElement' val='translate'>";
+    str += "번역";
+    str += "</button>";
+    str += "</div>";
+
     str += "</div>";
 
     this.element.innerHTML += str;
-
+    /*
+    var totalElements = this.element.querySelectorAll("button[val=translate]");
+    var lastElement = totalElements[totalElements.length - 1];
+    lastElement.addEventListener("click", this.translate);
+    */
     //add Event
 }
 
 var AppleController = function AppleController(appleModel, appleView){
     this.appleModel = appleModel;
     this.appleView = appleView;
+
 }
 
 AppleController.prototype.initialize = function initialize(){
+    this.appleView.translate = this.translate.bind(this);//
+}
 
+AppleController.prototype.saveFavorite = function saveFavorite(){
+    //saveFavorite
+}
+
+AppleController.prototype.translate = function translate(param){
+    //Translate words
+    var element = param.toElement.parentElement.parentElement;
+    console.log(element);
+    //detect
+    //a.parentElement.parentElement.querySelector("h2").textContent 제목으로 해당 언어를 분석
+
+    //language translate
 }
 
 AppleController.prototype.displayView = function displayView(obj){
 
     var params = [];
+    var articleIndex = 0;
 
     obj["articles"].map(function(element){
         param = {};
         try{
             param["author"] = element["author"];
+            param["index"] = articleIndex;
             param["title"] = element["title"];
             param["description"] = element["description"];
             param["url"] = element["url"];
             param["urlToImage"] = element["urlToImage"];
             param["publishedAt"] = element["publishedAt"];
-        }catch(e){
+        }catch(Exception){
             // ....
-            console.log(e);
             if(element["urlToImage"] == null){
                 param["urlToImage"] = "https://www.elegantthemes.com/blog/tips-tricks/how-to-fix-the-404-error-for-wordpress-websites";
             }else if(element["author"] === null){
                 param["author"] = "unknown..";
             }
         }
+        articleIndex++;
         params.push(param);
     });
     console.log(params.length);
@@ -117,7 +150,10 @@ AppleController.prototype.displayView = function displayView(obj){
         console.log(i);
         this.appleView.render(params[i]);
     }
-
+    var allElements = this.appleView.element.querySelectorAll("button[val=translate]");
+    for(var  i = 0;i<allElements.length;i++){
+        allElements[i].addEventListener('click',this.translate);
+    }
 }
 
 window.onload = function(){
@@ -131,6 +167,7 @@ window.onload = function(){
       function(list) {
         appleModel.myList = list;
         appleController = new AppleController(appleModel, appleView);
+        appleController.initialize();
         appleController.displayView(appleModel.myList);
       }
     );
