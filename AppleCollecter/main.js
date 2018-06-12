@@ -2,8 +2,6 @@ var AppleModel = function AppleModel(XMLHttpRequest){
     this.XMLHttpRequest = XMLHttpRequest;
     this.rawDataList = [];
     this.myList = [];
-    this.langTranslate = "http://api.microsofttranslator.com/V2/Ajax.svc/Translate?appId=ABB1C5A823DC3B7B1D5F4BDB886ED308B50D1919"; //&from=en&to=ru&text=hello%3Cb%3E";
-    this.langDetect = "http://translator.imtranslator.net/translator/detect.asp?k=32348493&text=";
     this.secretToken = "b3c2e4d351ec4a56bf403743d6056888";
     this.query = "ios";
     this.index = 0;
@@ -64,7 +62,7 @@ AppleView.prototype.render = function render(obj){
             str += "<span class='date'>" +obj[element] + "</span>";
             str += "</div>";
         }
-        
+
         if(element === "description"){
             str += "<div class='description'>";
             str += obj[element];
@@ -86,17 +84,12 @@ AppleView.prototype.render = function render(obj){
     str += "</div>";
 
     this.element.innerHTML += str;
-    /*
-    var totalElements = this.element.querySelectorAll("button[val=translate]");
-    var lastElement = totalElements[totalElements.length - 1];
-    lastElement.addEventListener("click", this.translate);
-    */
-    //add Event
 }
 
 var AppleController = function AppleController(appleModel, appleView){
     this.appleModel = appleModel;
     this.appleView = appleView;
+    console.log(this.appleModel);
 
 }
 
@@ -111,11 +104,33 @@ AppleController.prototype.saveFavorite = function saveFavorite(){
 AppleController.prototype.translate = function translate(param){
     //Translate words
     var element = param.toElement.parentElement.parentElement;
-    console.log(element);
-    //detect
-    //a.parentElement.parentElement.querySelector("h2").textContent 제목으로 해당 언어를 분석
+    let title = element.querySelector("h2").textContent;
+    let description = element.querySelector(".description").textContent;
 
-    //language translate
+    let langTranslate = "https://bcdefence.herokuapp.com/translate/convert?";// //&from=en&to=ru&text=hello%3Cb%3E";
+    let langDetect = "https://bcdefence.herokuapp.com/translate/check?text=";
+
+    HttpRequest('GET',langDetect+title,function(data){
+        var lang = JSON.parse(data);
+        //title 번역
+        HttpRequest('GET',langTranslate+"lang="+ lang.result +"&data="+title,function(data){
+          var trans = JSON.parse(data);
+
+          if(trans.result.search("ArgumentOutOfRangeException") == -1){
+              element.querySelector("h2").textContent = trans.result;
+              //description 번역
+              HttpRequest('GET',langTranslate+"lang="+lang.result + "&data="+description,function(data){
+                var trans = JSON.parse(data);
+                element.querySelector(".description").textContent = trans.result;
+              });
+
+          }else{
+            window.alert("해당 언어는 번역할 수 없습니다..");
+          }
+        });
+    })
+
+    param.toElement.removeEventListener('click',translate); //한번만 클릭할 수 있게 제작
 }
 
 AppleController.prototype.displayView = function displayView(obj){
@@ -147,20 +162,29 @@ AppleController.prototype.displayView = function displayView(obj){
     console.log(params.length);
 
     for(var i=0;i<params.length;i++){
-        console.log(i);
         this.appleView.render(params[i]);
     }
+
     var allElements = this.appleView.element.querySelectorAll("button[val=translate]");
     for(var  i = 0;i<allElements.length;i++){
-        allElements[i].addEventListener('click',this.translate);
+        allElements[i].addEventListener('click',this.translate); //give all elements eventListener
     }
+}
+
+function HttpRequest(method, url ,callback){
+    var request = new XMLHttpRequest();
+    request.onload = function(){
+        callback(request.responseText);
+    }
+    request.open(method, url, true);
+    request.send();
 }
 
 window.onload = function(){
     var appleView = new AppleView(document.getElementById("content"));
     var appleModel = new AppleModel(XMLHttpRequest);
     var appleController = null;
-    
+
     appleModel.getAppleData(
       "GET",
       "https://newsapi.org/v2/everything?q='"+ appleModel.query +"'&sortBy=publishedAt&apiKey="+appleModel.secretToken,
@@ -172,4 +196,3 @@ window.onload = function(){
       }
     );
 }
-
