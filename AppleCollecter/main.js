@@ -8,7 +8,6 @@ var AppleModel = function AppleModel(XMLHttpRequest){
 }
 
 AppleModel.prototype.getAppleData = function getAppleData(method,url,callback){
-    console.log(url);
     var request = new this.XMLHttpRequest();
 
     request.onload = function(){
@@ -18,29 +17,15 @@ AppleModel.prototype.getAppleData = function getAppleData(method,url,callback){
     request.open(method, url, true);
     request.send();
 }
-//lang Detect , lang Translate
-AppleModel.prototype.getTranslateData = function getTranslateData(url , query, callback){
-    var request = new this.XMLHttpRequest();
 
-    request.onload = function(){
-        var rawData = request.responseText;
-        callback(rawData);
-    }
-    request.open(url, query, callback);
-    request.send();
-}
-
-AppleModel.prototype.saveListData = function saveListData(){
-    localStorage.setItem("myFavoriteList" , this.myList);
-}
-
-AppleModel.prototype.loadListData = function loadListData(){
-    return localStorage.getItem("myList");
+AppleModel.prototype.saveData = function saveData(){
+  console.log(this.myList)
 }
 
 var AppleView = function AppleView(element){
     this.element = element;
     this.translate = null;
+    this.saveFavorite = null;
 }
 
 AppleView.prototype.render = function render(obj){
@@ -89,16 +74,21 @@ AppleView.prototype.render = function render(obj){
 var AppleController = function AppleController(appleModel, appleView){
     this.appleModel = appleModel;
     this.appleView = appleView;
-    console.log(this.appleModel);
 
 }
 
 AppleController.prototype.initialize = function initialize(){
+  console.log(this);
     this.appleView.translate = this.translate.bind(this);//
+    this.appleView.saveFavorite = this.saveFavorite.bind(this);
+    console.log(this.appleModel);
 }
 
-AppleController.prototype.saveFavorite = function saveFavorite(){
+AppleController.prototype.saveFavorite = function saveFavorite(param){
     //saveFavorite
+    var index = param.toElement.parentElement.parentElement.getAttribute("index");
+    console.log(param);
+
 }
 
 AppleController.prototype.translate = function translate(param){
@@ -141,7 +131,7 @@ AppleController.prototype.displayView = function displayView(obj){
     obj["articles"].map(function(element){
         param = {};
         try{
-            param["author"] = element["author"];
+            //param["author"] = element["author"];
             param["index"] = articleIndex;
             param["title"] = element["title"];
             param["description"] = element["description"];
@@ -149,17 +139,18 @@ AppleController.prototype.displayView = function displayView(obj){
             param["urlToImage"] = element["urlToImage"];
             param["publishedAt"] = element["publishedAt"];
         }catch(Exception){
-            // ....
-            if(element["urlToImage"] == null){
-                param["urlToImage"] = "https://www.elegantthemes.com/blog/tips-tricks/how-to-fix-the-404-error-for-wordpress-websites";
-            }else if(element["author"] === null){
-                param["author"] = "unknown..";
-            }
+          console.log(Exception);
         }
+        if(element["urlToImage"] == null){
+            param["urlToImage"] = "https://www.elegantthemes.com/blog/wp-content/uploads/2017/07/404-error.png";
+        }/*
+        else if(element["author"] === null){
+            param["author"] = "unknown..";
+        }*/
+
         articleIndex++;
         params.push(param);
     });
-    console.log(params.length);
 
     for(var i=0;i<params.length;i++){
         this.appleView.render(params[i]);
@@ -167,8 +158,12 @@ AppleController.prototype.displayView = function displayView(obj){
 
     var allElements = this.appleView.element.querySelectorAll("button[val=translate]");
     for(var  i = 0;i<allElements.length;i++){
+        //console.log(allElements[i].parentElement.querySelector("button[val=save]"));
+        allElements[i].parentElement.querySelector("button[val=save]").addEventListener('click',this.saveFavorite);
+
         allElements[i].addEventListener('click',this.translate); //give all elements eventListener
     }
+
 }
 
 function HttpRequest(method, url ,callback){
@@ -179,6 +174,19 @@ function HttpRequest(method, url ,callback){
     request.open(method, url, true);
     request.send();
 }
+
+function saveListData(appleModel){
+  console.log(appleModel.myList);
+  //localStorage.setItem("myFavoriteList",this.myList);
+}
+
+function loadListData(){
+  return localStorage.getItem("myList");
+}
+
+var saveManager = {
+  mylist : []
+};
 
 window.onload = function(){
     var appleView = new AppleView(document.getElementById("content"));
