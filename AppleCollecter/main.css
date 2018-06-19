@@ -1,31 +1,68 @@
-#header > nav {
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+body{
+    font-family: 'Nanum Gothic', Arial, Helvetica, sans-serif;
+}
+
+#header > #nav {
+    text-align: center;
+    position: fixed;
     width : 100%;
-    background-color: rgba(0,0,0,0.8);
+    left: 0;
+    top: 0;
+    background-color: #efefef;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-#header > nav > ul{
-    margin: 0;
-    padding: 0;
-}
-
-#header > nav > ul > li{
+#nav > #MainIcon , #nav > #Menu{
     display: inline-block;
-    list-style-type: none;
-
+}
+#nav > #Menu{
+    float: left;
 }
 
-#header > nav > ul > li > a{
-    color : #fff;
-    display: block;
-    line-height: 2em;
-    padding : 0.5em 0.5em;
+#nav img{
+    width : 40px;
+    padding : 10px;
+}
+
+.sidenav {
+    height: 100%;
+    width : 0;
+    position: fixed;
+    z-index: 1;
+    top:0;
+    left :0;
+    background-color: #efefef;
+    overflow-x: hidden;
+    transition : 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a{
+    padding: 8px 8px 8px 40px;
     text-decoration: none;
-}
-#header > nav > ul > li > a:hover{
+    font-size: 20px;
     color : gray;
+    display: block;
+    transition: 0.3s;
 }
+
+
+.sidenav a:hover{
+    color : black;
+}
+
+.sidenav .closebtn{
+    position: absolute;
+    top:0;
+    right : 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+
 
 #content {
-
+    margin-top :50px;
 }
 
 .uiCard {
@@ -85,11 +122,19 @@
     color : white;
     text-align: center;
     text-decoration: none;
+    min-width: 60px;
 }
 
 .scrollUp:hover{
   background-color: #cc0633;
 }
+
+
+@media screen and (max-height: 450px){
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+}
+
 /* smart phone size */
 @media screen and (min-width: 320px){
   .uiCard > .image > img{

@@ -3,15 +3,20 @@ var DataManager = {
   customLists : []
 }
 
+DataManager.customLists = JSON.parse(loadLocalStorage());
+console.log(DataManager.customLists);
+
 var AppleModel = function AppleModel(XMLHttpRequest){
     this.XMLHttpRequest = XMLHttpRequest;
     this.myList = [];
     this.secretToken = "b3c2e4d351ec4a56bf403743d6056888";
-    this.query = "Apple";
+    this.query = "ios";
     this.index = 0;
 }
 
 AppleModel.prototype.getAppleData = function getAppleData(method,url,callback){
+    console.log(url);
+
     var request = new this.XMLHttpRequest();
 
     request.onload = function(){
@@ -58,7 +63,7 @@ AppleView.prototype.render = function render(obj){
     });
     str += "<div class='uiBtn'>";
     str += "<button class='btnElement' val='save'>";
-    str += "저장";
+    str += "즐겨찾기로 저장";
     str += "</button>";
     str += "<button class='btnElement' val='translate'>";
     str += "번역";
@@ -83,11 +88,31 @@ AppleController.prototype.initialize = function initialize(){
 AppleController.prototype.saveFavorite = function saveFavorite(param){
     //saveFavorite
     var index = param.toElement.parentElement.parentElement.getAttribute("index");
-    if(DataManager.customLists.includes(DataManager.standardLists.articles[index]) == false){
+
+    if (DataManager.customLists == null){
       console.log("해당 데이터를 추가합니다...");
+      DataManager.customLists = [];
       DataManager.customLists.push(DataManager.standardLists.articles[index]);
+      saveLocalStorage();
+    }else if(DataManager.customLists.includes(DataManager.standardLists.articles[index]) == false){
+      var check = false;
+      DataManager.customLists.map(function(element){
+          if (element["title"] == DataManager.standardLists.articles[index].title){
+              check = true;
+          }
+      });
+
+      if(check == true){
+          console.log("이미 추가 되있음..");
+          window.alert("이미 추가 된 데이터 입니다.");
+      }else{
+          console.log("해당 데이터를 추가합니다...");
+          DataManager.customLists.push(DataManager.standardLists.articles[index]);
+          saveLocalStorage();
+      }
     }else{
       console.log("이미 추가 되있음..");
+      window.alert("이미 추가 된 데이터 입니다.");
     }
 
 }
@@ -101,6 +126,7 @@ AppleController.prototype.translate = function translate(param){
     let langTranslate = "https://bcdefence.herokuapp.com/translate/convert?";// //&from=en&to=ru&text=hello%3Cb%3E";
     let langDetect = "https://bcdefence.herokuapp.com/translate/check?text=";
 
+    window.alert("번역을 시작합니다! 조금 기다려주세요!");
     HttpRequest('GET',langDetect+title,function(data){
         var lang = JSON.parse(data);
         //title 번역
@@ -158,10 +184,25 @@ AppleController.prototype.displayView = function displayView(obj){
         allElements[i].parentElement.querySelector("button[val=save]").addEventListener('click',this.saveFavorite);
         allElements[i].parentElement.parentElement.querySelector(".image").children[0].addEventListener('click',openUrl);
         allElements[i].addEventListener('click',this.translate); //give all elements eventListener
-
     }
-
     console.log("start initialize...");
+
+    $('.image img').hover(function(){
+        //console.log("Mouse enter");
+        $(this).css({
+            border : "solid 3px green",
+            padding : "20",
+            borderRadius : "5%"
+        }).parent().append("<h1 id='message'>이미지를 클릭하면 해당 기사로 넘어갑니다.</h1>")
+    },function(){
+        //console.log("Mouse out");
+        $(this).css({
+            border: "",
+            borderRadius: 0
+        });
+        $('#message').remove();
+    })
+
     this.initialize();
 }
 
@@ -187,31 +228,47 @@ function BrowserCheck(){
    }
 }
 
-function openNavigation(){
-  document.getElementById("nav").style.width = "250px";
+function loadLocalStorage(){
+    return localStorage.getItem('myDB');
 }
 
-function closeNavigation(){
-  document.getElementById("nav").style.width = "0px";
+function clearLocalStorage(){
+    localStorage.setItem('myDB',null);
 }
 
+function saveLocalStorage(){
+    localStorage.setItem('myDB',JSON.stringify(DataManager.customLists));
+}
 
 BrowserCheck();
 
-window.onload = function(){
+$(document).ready(function(){
     var appleView = new AppleView(document.getElementById("content"));
     var appleModel = new AppleModel(XMLHttpRequest);
     var appleController = null;
 
+    $('.closebtn').click(function(){
+        console.log("close");
+        $('#mySideNav').css({
+            width: 0
+        })
+    })
+
+    $('.openbtn').click(function(){
+        console.log("open");
+        $('#mySideNav').css({
+            width : 250
+        })
+    });
+
     appleModel.getAppleData(
       "GET",
-      "https://newsapi.org/v2/everything?q='"+ appleModel.query +"'&sortBy=publishedAt&apiKey="+appleModel.secretToken,
+      "https://newsapi.org/v2/everything?q="+ appleModel.query +"&sortBy=publishedAt&apiKey="+appleModel.secretToken,
       function(list) {
         appleModel.myList = list;
         DataManager.standardLists = appleModel.myList;
         appleController = new AppleController(appleModel, appleView);
         appleController.displayView(appleModel.myList);
-        //appleController.initialize();
       }
     );
-}
+});
