@@ -1,0 +1,62 @@
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+body{
+    font-family: 'Nanum Gothic', Arial, Helvetica, sans-serif;
+}
+
+#header > #nav {
+    z-index: 100;
+    text-align: center;
+    position: fixed;
+    height: 60px;
+    width : 100%;
+    left: 0;
+    top: 0;
+    background-color: #efefef;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#nav > #MainIcon , #nav > #Menu{
+    display: inline-block;
+}
+#nav > #Menu{
+    float: left;
+}
+
+#nav img{
+    width : 40px;
+    padding : 10px;
+}
+
+.sidenav {
+    height: 100%;
+    width : 0;
+    position: fixed;
+    z-index: 1;
+    top:0;
+    left :0;
+    background-color: #efefef;
+    overflow-x: hidden;
+    transition : 0.5s;
+    padding-top: 60px;
+}
+
+.sidenav a{
+    padding: 8px 8px 8px 40px;
+    text-decoration: none;
+    font-size: 20px;
+    color : gray;
+    display: block;
+    transition: 0.3s;
+}
+
+
+.sidenav a:hover{
+    color : black;
+}
+
+.sidenav .closebtn{
+    position: absolute;
+    top:0;
+    right : 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
