@@ -63,7 +63,7 @@ AppleView.prototype.render = function render(obj){
     });
     str += "<div class='uiBtn'>";
     str += "<button class='btnElement' val='save'>";
-    str += "즐겨찾기로 저장";
+    str += "즐겨찾기";
     str += "</button>";
     str += "<button class='btnElement' val='translate'>";
     str += "번역";
@@ -88,7 +88,7 @@ AppleController.prototype.initialize = function initialize(){
 AppleController.prototype.saveFavorite = function saveFavorite(param){
     //saveFavorite
     var index = param.toElement.parentElement.parentElement.getAttribute("index");
-
+    window.alert("즐겨찾기로 저장합니다!");
     if (DataManager.customLists == null){
       console.log("해당 데이터를 추가합니다...");
       DataManager.customLists = [];

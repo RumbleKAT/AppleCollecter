@@ -12,6 +12,7 @@ function saveLocalStorage() {
 
 var TotalData = [];
 var selectedIndex = -1;// 처음 selectedIndex의 상태는 -1 (선택 안됨 상태)
+var mobileAddElement = {};
 
 TotalData = JSON.parse(loadLocalStorage());
 
@@ -30,11 +31,13 @@ function initTableList(){
         str += "<p class='mail_title ellipse'>" + TotalData[i].title + "</p>";
         str += "</div>";
         str += "<button type='button' class='btn_list_move'><span class='blind'>이동버튼</span></button>";
+        str += "<div style='padding : 10px'>";
         str += "</li>";
     }
 
     wrap_left[0].innerHTML = str;
     render(TotalData[0]);
+
     document.getElementsByClassName("btn_center")[0].style["height"] = document.getElementsByClassName("list_wrap")[0].clientHeight + "px";
 }
 
@@ -53,11 +56,9 @@ function elementDelete(element) {
             saveLocalStorage();
         }
     }
+    var rightView = document.getElementsByClassName("wrap_right")[0];
+    rightView.innerHTML = "";
 
-    if(TotalData.length == -1){
-        var rightView = document.getElementsByClassName("wrap_right")[0];
-        rightView.innerHTML = "";
-    }
 }
 
 //추가 할 리스트를 생성하는 함수
@@ -103,12 +104,10 @@ function render(obj) {
     str += "<h1 class='user_name ellipse content_font'>" + obj.source.name + "</h1>";
     str += "<p class='send_date'>" + obj.publishedAt + "</p>";
     str += "<p class='mail_title ellipse'>" + obj.title + "</p>";
-    if (obj.url.endsWith("jpg") || obj.url.endsWith("png") || obj.url.endsWith("gif")){
-
-    }else{
-        obj.url = "https://newsclick.in/themes/newsclick/assets/images/newsclick_logo.png";
+    if(obj.urlToImage == null){
+        obj.urlToImage = "https://newsclick.in/themes/newsclick/assets/images/newsclick_logo.png";
     }
-    str += "<img class='mail_title ellipse'" + "src="+obj.url + ">";
+    str += "<img class='mail_title ellipse'" + "src=" + obj.urlToImage + ">";
     str += "</div>";
     str += "<div class='content_bottom'>";
 
@@ -119,6 +118,7 @@ function render(obj) {
     }
     str += "</div>";
     rightView.innerHTML = str; //저장할 div 데이터를 warp_right에 저장
+
 }
 
 
@@ -129,10 +129,13 @@ $(document).ready(function(){
         rightView.innerHTML = "";
     }
 
+
     $('.btn_mail_delete').click(function(){
         $(this).parent().parent().hide('slow',function(){
             console.log("Delete motion");
         });
+        var rightView = document.getElementsByClassName("content_top")[0];
+        rightView.innerHTML = "";
     })
 
     $('.closebtn').click(function () {
@@ -149,4 +152,3 @@ $(document).ready(function(){
         })
     });
 })
-
