@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Explain</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="./src/css/header.css" />
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('.closebtn').click(function () {
+          console.log("close");
+          $('#mySideNav').css({
+            width: 0
+          })
+        })
+
+        $('.openbtn').click(function () {
+          console.log("open");
+          $('#mySideNav').css({
+            width: 250
+          })
+        });
+      });
+  </script>
+  <style>
+    .row img{
+      width : 300px;
+    }
+
+    .row *{
+      box-sizing:border-box;
+    }
+
+
+    .left {
+      padding:20px;
+      float:left;
+      width:20%;
+      margin-top:5px;
+    }
+
+    .main {
+      background-color:#f1f1f1;
+      padding:20px;
+      float:left;
+      width:80%;
+      margin-top:5px;
+    }
+
+    .right {
+      padding:20px;
+      float:left;
+      width:20%;
+      margin-top:5px;
+    }
+
+    .row{
+      overflow: hidden;
+    }
+
+    @media screen and (max-width:800px) {
+      .left, .main, .right {
+        width:100%;
+    }
+  }
+  </style>
+</head>
+<body>
+  <div id="header">
+    <div id="nav">
+      <div id="mySideNav" class="sidenav">
+        <img src="./src/img/close.png" class="closebtn" alt="close_icon" />
+        <a href="./home.html">홈</a>
+        <a href="./index.html">해외 ios 기사 모음</a>
+        <a href="./view02.html">즐겨찾기</a>
+        <a href="./explain.html">제작방법</a>
+      </div>
+      <div id="Menu">
+        <img src="./src/img/menu.png" class="openbtn" alt="menu_icon" />
+      </div>
+      <div id="MainIcon">
+        <img src="./src/img/apple.png" alt="icon" />
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:70px">
+    <h1>사용 기술 설명</h2>
+    <p>tag, css, jQuery(js 포함)에 대한 설명 페이지입니다.</p>
+  </div>
+  <div class= "row">
+    <div class="left">
+      <img src="./src/img/explain/tag.png" alt="tag"/>
+    </div>
+    <div class="main">
+      <h3>태그 작성</h3>
+      <p>
+        반복해서 사용되는 것은 class 생성자를, 특정 요소를 표현 하기 위해서 id 생성자를 이용했습니다.<br/>
+        특히 div에 id를 두어서 section -> article -> content로 이어지는 태그의 흐름을 제작했습니다.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="left">
+      <img src="./src/img/explain/css.png" alt="tag" />
+    </div>
+    <div class="main">
+      <h3>css 스타일 지정</h3>
+      <p>
+        자식 선택자와 후손 선택자를 활용하여 큰 태그부터 작은 세부적인 태그로 스타일을 적용시켜나갔습니다.
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </br>
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="left">
+      <img src="./src/img/explain/css_media.png" alt="tag" />
+    </div>
+    <div class="main">
+      <h3>미디어 태그의 활용</h3>
+      <p>
+        미디어 태그를 활용하여 스마트폰과 태블릿 그리고 PC에 알맞는 이미지 스타일을 적용했습니다. <br/>
+        특히 이미지의 경우 화면에 따라 비율이 달라지기 때문에 더욱 신경써서 제작했습니다. <br/>
+        각 플랫폼 마다 사이즈를 확인하여 padding이나 width의 비율을 재 정의 했습니다.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="left">
+      <img src="./src/img/explain/ajax.png" alt="tag" />
+    </div>
+    <div class="main">
+      <h3>AJAX의 활용</h3>
+      <p>
+        비동기 통신인 AJAX를 이용하여 NEWS JSON 정보를 수신했습니다.
+        <br/> JSON 파일의 element들을 연결하여 콜백함수를 이용하여 그 값을 처리했습니다.
+        <br/> 클라우드에 올려 놓은 자체 서버와 직접 연결하여 번역 기능을 만들었습니다.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="left">
+      <img src="./src/img/explain/ajax_02.png" alt="tag" />
+    </div>
+    <div class="main">
+      <h3>AJAX의 활용</h3>
+      <p>
+        먼저 해당 언어가 무엇인지 Request를 보내고 번역할 수 있는 언어라면 다시 한번 Request를 
+        보내어 번역이 가능하도록 만들었습니다. <br/>
+        만약 번역이 불가능한 언어라면 alert 메서드를 이용해 불가능 메시지를 띄웠습니다.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="left">
+      <img src="./src/img/explain/localStorage.png" alt="tag" />
+    </div>
+    <div class="main">
+      <h3>LocalStorage의 활용</h3>
+      <p>
+        즐겨찾기에 저장한 데이터를 myDB라는 key값에 넣어서 localStorage 객체에 저장했습니다.
+        </br> 저장한 객체 값은 다른 페이지에서도 사용 가능한 쿠키 데이터가 됩니다.
+        </br> 이를 통해 즐겨찾기 목록에서 위의 데이터를 수정할 수 있도록 기능을 추가했습니다.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="left">
+      <img src="./src/img/explain/jquery.png" alt="tag" />
+    </div>
+    <div class="main">
+      <h3>JQuery의 활용</h3>
+      <p>
+        hover와 animate 그리고 attr등 다양한 Jquery 문법을 활용하여 제작했습니다.
+        </br> 이미지를 선택하면 다른 이미지로 바뀌고 해당 이미지를 다시 선택하면 원래의 이미지로 돌아가는 토글 기능을 만들었습니다.
+        </br> 마우스가 위에 있으면 해당 이미지 주위에 초록색 사각형이 생기도록 제작했습니다.
+        </br> 처음 화면을 로드하면 서서히 div가 줄어들수 있도록 제작했습니다.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>
