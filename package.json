@@ -1,27 +1,15 @@
 {
-  "name": "korean-helperv2",
-  "version": "1.2.0",
-  "description": "korean dictionary message chat bot",
+  "name": "koreanHelper",
+  "version": "1.0.0",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "dev": "next"
   },
-  "keywords": [
-    "chatbot",
-    "nodejs",
-    "rest",
-    "api"
-  ],
-  "author": "song myeong jin",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.3",
-    "langdetect": "^0.2.1",
-    "languagedetect": "^1.1.1",
-    "mongoose": "^5.2.6",
-    "promise": "^8.0.1",
-    "request": "^2.87.0",
-    "xml2js": "^0.4.19"
+    "axios": "^0.18.0",
+    "next": "^6.1.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
   }
 }
