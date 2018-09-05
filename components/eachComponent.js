@@ -8,9 +8,10 @@ class eachComponent extends React.Component {
       title: this.props.title,
       response: null
     };
+     this.myRef = React.createRef();
   }
 
-  click = () =>
+  search = () =>
     axios.get("https://koreanhelper2.herokuapp.com/keyboard").then(result => {
         let temp = result.data.buttons.map(
             (element,index) => <li key={index}>{element}</li>
@@ -18,12 +19,18 @@ class eachComponent extends React.Component {
         this.setState({
             response: temp
         });
+        //console.log(this.myRef.current);
+        this.myRef.current.style.display = "block";
     });
+
+  reset = () => {
+    this.myRef.current.style.display= "none";
+  }
 
   componentDidMount() {
 
   }
-  
+
   render() {
     return (
       <div>
@@ -31,6 +38,10 @@ class eachComponent extends React.Component {
           {`
             h1 {
               color: red;
+            }
+            h2{
+              text-align : left;
+
             }
             .content {
               text-align: center;
@@ -53,6 +64,18 @@ class eachComponent extends React.Component {
               width: 10%;
               height: 50px;
               font-size: 1.2em;
+              background-color : deepskyblue;
+              color : #fff;
+              margin-right : 1rem;
+            }
+            .searchResult{
+              background-color : gray;
+              padding : 20px;
+              display: none;
+              border-radius : 20px;
+              text-align :left;
+              width : 50%;
+              margin: 0 auto;
             }
           `}
         </style>
@@ -60,11 +83,17 @@ class eachComponent extends React.Component {
           <h2>{this.state.title}</h2>
           <input type="textarea" className="textAreaStyle" />
           <div className="warpbtn">
-            <button className="btn" onClick={this.click}>
-              Seach
+            <button className="btn" onClick={this.search}>
+              검색하기
+            </button>
+            <button className="btn" onClick={this.reset}>
+              초기화
             </button>
           </div>
-          <div className="resArea">{this.state.response}</div>
+          <div className="searchResult" ref={this.myRef}>
+            <h2>결과</h2>
+            <ul className="resArea">{this.state.response}</ul>
+          </div>
         </div>
       </div>
     );
